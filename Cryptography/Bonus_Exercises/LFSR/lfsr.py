@@ -9,7 +9,7 @@ def rdups(variable):
 
 x = PolynomialRing(GF(2), 'x').gen()
 
-#Size of the problem, only even numbers will produce results
+#Size of the problem
 N = 6
 
 divisor = divisors(2**(N)-1)[1:]
