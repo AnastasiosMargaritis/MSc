@@ -10,6 +10,7 @@ def KSA(key):
         S[i], S[j] = S[j], S[i]
 
     return S
+    
 # Pseudo-random generation algorithm
 def PRGA(S, n):
     i, j = 0, 0
@@ -23,6 +24,8 @@ def PRGA(S, n):
         K = S[(S[i] + S[j]) % 256]
         key.append(K)
     return key
+
+
 #RC4 Encryption Process
 def encrypt(plaintext, keystream):
     plaintext = np.array([ord(i) for i in plaintext])

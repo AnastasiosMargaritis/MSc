@@ -43,15 +43,12 @@ def calculate_key_length(cipher, min_length, max_length):
     return ICs
 
 # Calculate chi-squared statistic
-def chi_square(letter, english):
-    sum = 0
-    for i in range(len(letter_freq)):
-        sum += (letter_freq[i] english_freq[i])**2 / english_freq[i]
+d
 
 def decipher(cipher):
     letter_freq = calculate_freq(cipher).values()
     english_freq = [i * len(cipher) for i in ENGLISH_FREQ]
-
+    chi_square(letter_freq, english_freq)
 
 with open('vigenere.txt', 'r') as f:
     cipher = f.read()
