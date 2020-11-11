@@ -15,20 +15,20 @@ def bitstring_to_bytes(x):
 
 # Create messages differ to 1 bit, their final one.
 def create_message_pairs(length):
-    m1 = ''
+    m1 = []
 
     for i in range(length):
-        m1 += str(randint(0, 1))
+        m1.append(randint(0, 1))
 
-    m2 = m1
+    m2 = m1.copy()
     randIndex = randint(0, 63)
 
-    if m2[randIndex] == '0':
-        m2[randIndex] == '1'
+    if m2[randIndex] == 0:
+        m2[randIndex] = 1
     else:
-        m2[randIndex] == '0'
+        m2[randIndex] = 0
 
-    return [bitstring_to_bytes(m1), bitstring_to_bytes(m2)]
+    return bitstring_to_bytes(m1), bitstring_to_bytes(m2)
 
 # Calculates amount of different bits for each pair of messages.
 # All messages are converted to 128 bits.
@@ -55,24 +55,24 @@ AES_CBC = 0
 Blowfish_ECB = 0
 Blowfish_CBC = 0
 
-num_of_messages = 50
+num_of_messages = 35
 
-# Create a dictionary storing the different pairs.
-for i in range(num_of_messages):
-    pairs[i] = create_message_pairs(BIT_MESSAGE)
+ 
 
 
-for key in pairs:
-#................................... AES ECB MODE........................
+for i in range(50):
+
+    m1, m2 = create_message_pairs(BIT_MESSAGE)
+# ................................... AES ECB MODE........................
     key_AES_ECB = b'This is my key for today'
     cipher = AES.new(key_AES_ECB, AES.MODE_ECB)
 
 
     # Encrypt the two messages.
-    m1Enc = cipher.encrypt(pad(pairs[key][0], AES.block_size))
-    m2Enc = cipher.encrypt(pad(pairs[key][1], AES.block_size))
+    m1Enc = cipher.encrypt(pad(m1, AES.block_size))
+    m2Enc = cipher.encrypt(pad(m2, AES.block_size))
 
-    AES_ECB += count_different_bits(m1Enc, m2Enc) / 128
+    AES_ECB += count_different_bits(m1Enc, m2Enc) / 64
 
 
 #.............................. AES CBC MODE............................
@@ -83,10 +83,10 @@ for key in pairs:
    
 
     # Encrypt the two messages.
-    m1Enc = iv + cipher.encrypt(pad(pairs[key][0], AES.block_size))
-    m2Enc = iv + cipher.encrypt(pad(pairs[key][1], AES.block_size))
+    m1Enc = iv + cipher.encrypt(pad(m1, AES.block_size))
+    m2Enc = iv + cipher.encrypt(pad(m2, AES.block_size))
 
-    AES_CBC += count_different_bits(m1Enc, m2Enc) / 128
+    AES_CBC += count_different_bits(m1Enc, m2Enc) / 64
 
 
 #.............................. BLOWFISH ECB MODE.........................
@@ -94,10 +94,10 @@ for key in pairs:
     cipher = Blowfish.new(key_BLOWFISH_ECB, Blowfish.MODE_ECB)
 
     # Encrypt the two messages.
-    m1Enc = cipher.encrypt(pairs[key][0])
-    m2Enc = cipher.encrypt(pairs[key][1])
+    m1Enc = cipher.encrypt(m1)
+    m2Enc = cipher.encrypt(m2)
 
-    Blowfish_ECB += count_different_bits(m1Enc, m2Enc) / 128
+    Blowfish_ECB += count_different_bits(m1Enc, m2Enc) / 64
 
 
 #.............................. BLOWFISH CBC MODE.........................
@@ -107,10 +107,10 @@ for key in pairs:
     cipher = Blowfish.new(key_BLOWFISH_CBC, Blowfish.MODE_CBC, iv)
 
     # Encrypt the two messages.
-    m1Enc = iv + cipher.encrypt(pairs[key][0])
-    m2Enc = iv + cipher.encrypt(pairs[key][1])
+    m1Enc = iv + cipher.encrypt(m1)
+    m2Enc = iv + cipher.encrypt(m2)
 
-    Blowfish_CBC += count_different_bits(m1Enc, m2Enc) / 128
+    Blowfish_CBC += count_different_bits(m1Enc, m2Enc) / 64
 
 
 print(AES_ECB / num_of_messages)

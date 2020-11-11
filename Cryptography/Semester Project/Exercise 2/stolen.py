@@ -31,7 +31,7 @@ def changeBit(y, i):
 # ...................................MAIN...........................................
 counterEcb = 0
 counterCbc = 0
-for j in range(80):
+for j in range(50):
     x = []
     for i in range(0, 64):
         x.append(random.randint(0, 1))
