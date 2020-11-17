@@ -81,7 +81,7 @@ class LFSR:
 
 
 
-lfsr = LFSR([5, 6, 8, 9])
+lfsr = LFSR([0, 1, 3, 4])
 
 cipher = lfsr.msgtobits('i!))aiszwykqnfcyc!?secnncvch'.upper())
 
@@ -93,17 +93,12 @@ c = lfsr.msgtobits('.s'.upper())
 
 # Calculating Encryption key for the above message and cipher.
 state = m ^ c
-
-
-
-seed = BitArray(bin = '1111001011')
 key = ''
 
 while(len(key) < 140):
-    seed, k = lfsr.next_state(seed)
+    state, k = lfsr.next_state(state)
     key += '1' if k else '0'
 
-print(key)
 key = BitArray(bin = key)
 print(lfsr.bitstomsg(key ^ cipher))
-print(lfsr.bitstomsg(cipher).upper())
+

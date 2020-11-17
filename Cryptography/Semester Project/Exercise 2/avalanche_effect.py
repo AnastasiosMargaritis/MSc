@@ -48,20 +48,16 @@ def count_different_bits(x, y):
     
     return counter
 #......................................MAIN.............................
-pairs = {}
-
 AES_ECB = 0
 AES_CBC = 0
 Blowfish_ECB = 0
 Blowfish_CBC = 0
 
-num_of_messages = 35
-
- 
+num_of_messages = 180
 
 
-for i in range(50):
-
+for i in range(num_of_messages):
+    # Create a pair of messages
     m1, m2 = create_message_pairs(BIT_MESSAGE)
 # ................................... AES ECB MODE........................
     key_AES_ECB = b'This is my key for today'
@@ -89,7 +85,7 @@ for i in range(50):
     AES_CBC += count_different_bits(m1Enc, m2Enc) / 64
 
 
-#.............................. BLOWFISH ECB MODE.........................
+#............................ BLOWFISH ECB MODE..........................
     key_BLOWFISH_ECB = b'This is my key for today'
     cipher = Blowfish.new(key_BLOWFISH_ECB, Blowfish.MODE_ECB)
 
