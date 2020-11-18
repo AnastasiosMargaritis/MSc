@@ -1,5 +1,5 @@
 # Returns the prime factors of the number N.
-def factors_of_number(N):
+def prime_factors(N):
 
     factors = [2, 3]
 
@@ -60,7 +60,7 @@ def decrypt(C, keys):
 N = 11413
 e = 19
 
-print(factors_of_number(N))
+print(prime_factors(N))
 
 # Our encrypted text
 C=[3203,909,3143,5255,5343,3203,909,9958,5278,5343,9958,5278,4674,909,9958,792,909,4132,3143,9958,3203,5343,792,3143,4443]
