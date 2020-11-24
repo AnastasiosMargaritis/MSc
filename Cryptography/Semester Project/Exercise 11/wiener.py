@@ -1,5 +1,25 @@
-import cmath
+import math
+import base64
 
+
+# Calculates a^g mod N.
+def fast(a, g, N):
+    # Convert exponent to bits
+    g = list(bin(g)[2:])
+    g.reverse()
+
+    x = a
+    d = 1
+
+
+    for i in range(0, len(g)):
+
+        if g[i] == '1':
+            d = (d*x) % N
+        
+        x = x**2 % N
+
+    return d
 
 # Calculates the fractions of e/N.
 # Returns a list of fractions.
@@ -37,7 +57,6 @@ def calc_continued_fractions(fractions):
     
     return cf
 
-
 # Calculates Φ(Ν) and stores only integer values.
 # Cleans continued_fractions list from pairs that doesn't
 # produce integer Φ(Ν).
@@ -47,7 +66,7 @@ def calc_f(continued_fractions, e):
     possible_keys = []
 
     for pair in continued_fractions:
-        f = (e * pair[1] -1) / pair[0]
+        f = (e * pair[1] -1) // pair[0]
         if (f % 1 == 0.0):
             Fn.append(f)
             possible_keys.append(pair)
@@ -62,24 +81,45 @@ def quadradic_roots(N, Fn):
 
     for fn in Fn:
         a = 1
-        b = N - fn + 1
+        b = (N - fn) + 1
         c = N
 
         # Calculate the discriminant.
         d = (b ** 2) - (4 * a * c)
 
-        root1 = (-b-cmath.sqrt(d))/(2*a)
-        root2 = (-b+cmath.sqrt(d))/(2*a)
+        if d >= 0 and (int(math.sqrt(d) + 0.5) ** 2 == d):
+            root1 = (-b + math.sqrt(d))/ 2 * a
+            root2 = (-b - math.sqrt(d))/ 2 * a
+            f = fn
+            
+    return [abs(root1), abs(root2)], Fn.index(f)
 
-        roots.append([root1, root2])
+# Decryption function
+def decrypt(C, N, key):
+    d = []
 
-    
-    return roots
+    for char in C:
+        d.append(chr(fast(int(char), key, N)))
+
+    return d 
 
 
 # Public key of RSA. 
 N = 194749497518847283
 e = 50736902528669041
+
+# Cipher text.
+C = 'Qz1bNDc0MDYyNjMxOTI2OTM1MDksNTEwNjUxNzgyMDExNzIyMjMsMzAyNjA1NjUyMzUxMjg3MDQsODIzODU5NjMzMzQ0MDQyNjgNCjgxNjkxNTY2NjM5Mjc5MjksNDc0MDYyNjMxOTI2OTM1MDksMTc4Mjc1OTc3MzM2Njk2NDQyLDEzNDQzNDI5NTg5NDgwMzgwNg0KMTEyMTExNTcxODM1NTEyMzA3LDExOTM5MTE1MTc2MTA1MDg4MiwzMDI2MDU2NTIzNTEyODcwNCw4MjM4NTk2MzMzNDQwNDI2OA0KMTM0NDM0Mjk1ODk0ODAzODA2LDQ3NDA2MjYzMTkyNjkzNTA5LDQ1ODE1MzIwOTcyNTYwMjAyLDE3NDYzMjIyOTMxMjA0MTI0OA0KMzAyNjA1NjUyMzUxMjg3MDQsNDc0MDYyNjMxOTI2OTM1MDksMTE5MzkxMTUxNzYxMDUwODgyLDU3MjA4MDc3NzY2NTg1MzA2DQoxMzQ0MzQyOTU4OTQ4MDM4MDYsNDc0MDYyNjMxOTI2OTM1MDksMTE5MzkxMTUxNzYxMDUwODgyLDQ3NDA2MjYzMTkyNjkzNTA5DQoxMTIxMTE1NzE4MzU1MTIzMDcsNTI4ODI4NTEwMjYwNzI1MDcsMTE5MzkxMTUxNzYxMDUwODgyLDU3MjA4MDc3NzY2NTg1MzA2DQoxMTkzOTExNTE3NjEwNTA4ODIsMTEyMTExNTcxODM1NTEyMzA3LDgxNjkxNTY2NjM5Mjc5MjksMTM0NDM0Mjk1ODk0ODAzODA2DQo1NzIwODA3Nzc2NjU4NTMwNiw0NzQwNjI2MzE5MjY5MzUwOSwxODU1ODIxMDUyNzUwNTA5MzIsMTc0NjMyMjI5MzEyMDQxMjQ4DQoxMzQ0MzQyOTU4OTQ4MDM4MDYsODIzODU5NjMzMzQ0MDQyNjgsMTcyNTY1Mzg2MzkzNDQzNjI0LDEwNjM1NjUwMTg5MzU0NjQwMQ0KODE2OTE1NjY2MzkyNzkyOSw0NzQwNjI2MzE5MjY5MzUwOSwxMDM2MTA1OTcyMDYxMDgxNiwxMzQ0MzQyOTU4OTQ4MDM4MDYNCjExOTM5MTE1MTc2MTA1MDg4MiwxNzI1NjUzODYzOTM0NDM2MjQsNDc0MDYyNjMxOTI2OTM1MDksODE2OTE1NjY2MzkyNzkyOQ0KNTI4ODI4NTEwMjYwNzI1MDcsMTE5MzkxMTUxNzYxMDUwODgyLDgxNjkxNTY2NjM5Mjc5MjksNDc0MDYyNjMxOTI2OTM1MDkNCjQ1ODE1MzIwOTcyNTYwMjAyLDE3NDYzMjIyOTMxMjA0MTI0OCwzMDI2MDU2NTIzNTEyODcwNCw0NzQwNjI2MzE5MjY5MzUwOQ0KNTI4ODI4NTEwMjYwNzI1MDcsMTE5MzkxMTUxNzYxMDUwODgyLDExMTUyMzQwODIxMjQ4MTg3OSwxMzQ0MzQyOTU4OTQ4MDM4MDYNCjQ3NDA2MjYzMTkyNjkzNTA5LDExMjExMTU3MTgzNTUxMjMwNyw1Mjg4Mjg1MTAyNjA3MjUwNywxMTkzOTExNTE3NjEwNTA4ODINCjU3MjA4MDc3NzY2NTg1MzA2LDExOTM5MTE1MTc2MTA1MDg4MiwxMTIxMTE1NzE4MzU1MTIzMDcsODE2OTE1NjY2MzkyNzkyOQ0KMTM0NDM0Mjk1ODk0ODAzODA2LDU3MjA4MDc3NzY2NTg1MzA2XQ=='
+
+# Base64 Decoding (ASCII)
+base64_bytes = C.encode('ascii')
+message_bytes = base64.b64decode(base64_bytes)
+C = message_bytes.decode('ascii')
+    
+# variable cipher is string, so we should format it into a list
+C = C[3:-1]
+C = C.replace('\r\n', ',').strip()
+C = C.split(',')
 
 # Calculate the fraction vector.
 fractions = calc_fractions(N, e)
@@ -91,5 +131,8 @@ continued_fractions = calc_continued_fractions(fractions)
 Fn, possible_keys = calc_f(continued_fractions, e)
 
 # For each Φ(Ν) calculate the roots of the quadradic equation.
-prime_numbers = quadradic_roots(N, Fn)
+prime_numbers, index = quadradic_roots(N, Fn)
 
+# Decryption message.
+decryption = decrypt(C, N, possible_keys[index][1])
+print(''.join(decryption))
