@@ -22,7 +22,7 @@ def RSA_keys(bits = 2048):
     # Calculate dP, dQ, qInv.
     dP = sympy.mod_inverse(e, p - 1)
     dQ = sympy.mod_inverse(e, q - 1)
-    qInv = sympy.mod_inverse(1, p)
+    qInv = sympy.mod_inverse(q, p)
 
     return [p, q, e, d, N, dP, dQ, qInv]
 

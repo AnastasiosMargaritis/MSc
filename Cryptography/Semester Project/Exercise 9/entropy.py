@@ -47,7 +47,7 @@ def commited_entropy(entropies, joint_entropy):
  
 # Caculates mutual information.
 def mutual_information(entropy, commited):
-    return entropy - joint_entropy
+    return entropy - commited
     
     
     
