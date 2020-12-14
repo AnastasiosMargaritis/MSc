@@ -8,25 +8,18 @@ public class HS {
     private List<Node> nodes = new ArrayList<>();
     private boolean isLeaderElected = false;
 
+    // Constructor of HS class. Accepts as arguments the number of nodes
+    // and created a List of nodes. Initially, all nodes are elected as leader.
     public HS(int bound) {
-
         for(int i = 0; i < bound; i++){
             this.nodes.add(new Node());
             this.nodes.get(i).setLeader(true);
         }
     }
 
-    public HS(List<Node> nodes){
-        this.nodes = nodes;
-        for(int i = 0; i < this.nodes.size(); i++){
-            this.nodes.get(i).setLeader(true);
-        }
-    }
-
-    public void setNodes(List<Node> nodes) {
-        this.nodes = nodes;
-    }
-
+    // Election function for HS class. In a variable phase we store the value of the step we're.
+    // For each node, in each phase we send to Math.pow(2, phase) nodes in both directions to compare UUID's.
+    // Finally, for each step of the phase, we call the election complete function to check if our procedure is finished.
     public void electLeader(){
         int phase = 0;
 
@@ -66,6 +59,7 @@ public class HS {
         }
     }
 
+    // Checks if our election procedure is finished. Counts the current declared leader nodes for each phase.
     public boolean electionComplete(){
         int counter = 0;
         for (Node e: this.nodes){

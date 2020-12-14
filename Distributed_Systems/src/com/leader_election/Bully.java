@@ -10,6 +10,8 @@ public class Bully {
     private List<Node> nodes = new ArrayList<>();
     private boolean leaderElected = false;
 
+//    Constructor of Bully class. Accepts as arguments the number of nodes
+//    and created a List of nodes.
     public Bully(int bound) {
         for(int i = 0; i < bound; i++){
             this.nodes.add(new Node());
@@ -20,6 +22,8 @@ public class Bully {
         this.nodes = nodes;
     }
 
+//    Leader election for Bully Algorithm class. Each time it is called,
+//    elects leader the node which is currently active and has the max UUID.
     public void election(){
 
         UUID maxUUID = UUID.randomUUID();
@@ -62,6 +66,10 @@ public class Bully {
         System.out.println();
     }
 
+//    Real time representation of synchronous behavior of Bully Algorithm.
+//    A menu of 3 options is presented. In each step we can De-Activate the current leader node,
+//    reactivate all nodes or eti the menu. When we either de-activate or reactivate nodes
+//    leader election is executed.
     public void syncMonitoring(){
         this.election();
         boolean exit = false;
