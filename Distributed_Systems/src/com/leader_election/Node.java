@@ -6,7 +6,7 @@ public class Node {
 
     private UUID uuid;
     private boolean isLeader = false;
-    private static int leaderNode;
+    private boolean isActive = true;
 
     public Node() {
         this.uuid = UUID.randomUUID();
@@ -26,5 +26,13 @@ public class Node {
 
     public void setLeader(boolean leader) {
         isLeader = leader;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

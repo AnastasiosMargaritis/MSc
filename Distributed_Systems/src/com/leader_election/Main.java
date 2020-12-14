@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int numberOfNodes = 15;
+        int numberOfNodes = 5;
         List<Node> nodes = new ArrayList<>();
         for(int i = 0; i < numberOfNodes; i++){
           nodes.add(new Node());
@@ -23,9 +23,12 @@ public class Main {
 //        hs.electLeader();
 
 //----------------------- FLOODMAX-----------------------------
+//
+//        FloodMax floodMax = new FloodMax(numberOfNodes);
+//        floodMax.electLeader();
 
-        FloodMax floodMax = new FloodMax(numberOfNodes);
-        floodMax.electLeader();
-
+//----------------------- BULLY ---------------------------
+        Bully bully = new Bully(numberOfNodes);
+        bully.syncMonitoring();
     }
 }
