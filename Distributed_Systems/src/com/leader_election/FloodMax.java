@@ -74,7 +74,6 @@ public class FloodMax {
         List<UUID> leaders = new ArrayList<>();
         for(int i = 0; i < this.nodes.size(); i++){
             leaders.add(this.nodes.get(i).getUuid());
-            System.out.print(leaders.get(i) + " ");
         }
 
         System.out.println();
@@ -96,10 +95,16 @@ public class FloodMax {
                     }
                 }
                 for(int k = 0; k < this.nodes.size(); k++){
-                    System.out.print(leaders.get(k) + " ");
+                    System.out.println("Node " + k + " has UUID " + this.nodes.get(k).getUuid() + ".");
                 }
+                System.out.println("===================================");
                 System.out.println();
             }
         }
+        for(int k = 0; k < this.nodes.size(); k++){
+            System.out.println("Node " + k + " has UUID " + this.nodes.get(k).getUuid() + ".");
+        }
+        System.out.println("===================================");
+        System.out.println();
     }
 }
