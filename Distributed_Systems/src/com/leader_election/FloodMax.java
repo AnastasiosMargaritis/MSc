@@ -50,61 +50,49 @@ public class FloodMax {
     // Check if our election procedure is done. We take as an argument a list of UUID's and
     // we push all the values of the list to a Set. If the size of the set equals to 1 -> which means
     // that only one value is sent by each node -> our election algorithm is completed.
-    public boolean checkElection(List<UUID> leader){
+    public boolean checkElection(){
         Set<UUID> unique = new HashSet<>();
 
-        for(int i = 0; i < this.nodes.size(); i++){
-            unique.add(leader.get(i));
+        for(Node node: this.nodes){
+            unique.add(node.getUuid());
         }
-
-        System.out.println("Check election " + unique.size());
 
         if(unique.size() == 1){
             return true;
         }else{
             return false;
         }
+
     }
 
     // In each phase, all nodes communicate with the nodes they are connected and exchage UUID's. In the end of
     // each step, all nodes store the max UUID value among them.
     public void electLeader(){
         this.createGraph();
+        List<UUID> leader = new ArrayList<>();
 
-        List<UUID> leaders = new ArrayList<>();
-        for(int i = 0; i < this.nodes.size(); i++){
-            leaders.add(this.nodes.get(i).getUuid());
+        for(Node node: nodes){
+            leader.add(node.getUuid());
         }
 
-        System.out.println();
-
-        while(!checkElection(leaders)){
+        while(!checkElection()){
             for(int i = 0; i < this.nodes.size(); i++){
                 UUID max = this.nodes.get(i).getUuid();
-
-                for(int j = 0; j < this.nodes.size(); j++){
-                    if(this.graph[i][j] != 0 && max.compareTo(this.nodes.get(j).getUuid()) <0){
+                for (int j = 0; j < this.nodes.size(); j++){
+                    if(this.graph[i][j] != 0 && max.compareTo(this.nodes.get(j).getUuid()) < 1){
                         max = this.nodes.get(j).getUuid();
                     }
                 }
-
-                leaders.set(i, max);
-                for(int j = 0; j < this.nodes.size(); j++){
-                    if(this.graph[i][j] != 0){
-                        this.nodes.get(j).setUuid(max);
-                    }
-                }
-                for(int k = 0; k < this.nodes.size(); k++){
-                    System.out.println("Node " + k + " has UUID " + this.nodes.get(k).getUuid() + ".");
-                }
-                System.out.println("===================================");
-                System.out.println();
+                this.nodes.get(i).setUuid(max);
             }
         }
-        for(int k = 0; k < this.nodes.size(); k++){
-            System.out.println("Node " + k + " has UUID " + this.nodes.get(k).getUuid() + ".");
+
+        for(int i = 0; i < this.nodes.size(); i++){
+           if(this.nodes.get(i).getUuid().compareTo(leader.get(i)) == 0){
+               System.out.println("Node " + i + " is the Leader.");
+           }else{
+               System.out.println("Node " + i + " is not the Leader.");
+           }
         }
-        System.out.println("===================================");
-        System.out.println();
     }
 }
