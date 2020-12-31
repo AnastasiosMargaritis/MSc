@@ -63,7 +63,7 @@ def Miller_Rabin(a):
     # Calculates d,r such as a - 1 = d * 2^r
     d, r = calculate_d_r(a)
     
-    # Pick 20 random number rand_num in [2, a) and check:
+    # Pick 20 random numbers rand_num in [2, a) and check:
     # if rand_num ^ d % a == 1 and for j in 0 <= j <= r - 1
     # rand_num ^ (2^i * d) % a == a - 1, which are the 
     # Miller-Rabin conditions for primality.

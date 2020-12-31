@@ -42,13 +42,94 @@ def calculate_key_length(cipher, min_length, max_length):
 
     return ICs
 
-# Calculate chi-squared statistic
-d
+# Breaks the cipher into key_length number of ciphers,
+# taking every nth letter of the cipher.
+def break_ciphers(cipher, key_length):
+    dict = {}
 
-def decipher(cipher):
-    letter_freq = calculate_freq(cipher).values()
-    english_freq = [i * len(cipher) for i in ENGLISH_FREQ]
-    chi_square(letter_freq, english_freq)
+    for i in range(0, key_length):
+
+        counter = i;
+        chars = []
+        st = ""
+
+        while(counter < len(cipher)):
+            chars.append(cipher[counter])
+            counter += key_length
+        
+        
+        dict[i] = st.join(chars)
+    
+    return dict
+
+# Counters chars in a string.
+def Counter(cipher):
+
+    dict ={}
+
+    for i in range(65, 91):
+        dict[chr(i)] = 0
+    
+    for char in cipher:
+        dict[char] += 1
+
+    return dict
+
+
+# Calculates chi-gamma square for all cipher combinations.
+# Each time it is called returns a char of our key.
+def chi_gamma_square(combinations):
+
+    dict = {}
+    frequency = []
+
+    for combo in combinations:
+        frequency.append(Counter(combo))
+
+    counter = 0
+    for freq in frequency:
+        sum = 0
+
+        for i in range(0, 26):
+            sum += ((freq[chr(65 + i)] - len(combinations[0]) * ENGLISH_FREQ[i]) ** 2) / (len(combinations[0]) * ENGLISH_FREQ[i])
+        
+        dict[counter] = sum
+        counter += 1
+    
+    return chr(65 + min(dict, key = dict.get))
+    
+# Creates all different 26 combinations for each cipher. Calls chi-gamma square to 
+# calculate chi-gamma and extract the key.
+def cipher_combinations(ciphers):
+
+    combinations = []
+    combinations.append(ciphers)
+
+    for i in range(1, 26):
+        str1 = ""
+        for cipher in ciphers:
+            
+            str1 += chr((ord(cipher) - i - 65) % 26 + 65)
+        
+        combinations.append(str1)
+        
+    return chi_gamma_square(combinations)
+
+# Vigenere decryption function.
+def decrypt(cipher, key):
+
+    while(len(key) < len(cipher)):
+        key += key
+
+    print()
+
+    m = ""
+
+    for i in range(0, len(cipher)):
+        m += chr((ord(cipher[i]) - ord(key[i])) % 26 + 65)
+
+    return m
+
 
 with open('vigenere.txt', 'r') as f:
     cipher = f.read()
@@ -65,19 +146,14 @@ prob_key_length = calculate_key_length(cipher, min_key_length, max_key_length)
 
 # Extracting biggest probability, so key_length.
 values = prob_key_length.values()
-key_length = list(prob_key_length.keys())[list(prob_key_length.values()).index(max(values))]
-decipher(cipher)
+key_length = 7
 
-# key = ''
-# for i in range(0, key_length):
+ciphers = break_ciphers(cipher, key_length)
 
-#     decipher_sequence = ''
-#     for j in range(i, len(cipher), key_length):
-#         decipher_sequence += cipher[j]
-
-#     key += decipher(decipher_sequence)
-
-# print(key)
+key = ""
+for i in range(0, key_length):
+    key += cipher_combinations(ciphers[i])
 
 
-
+print('The Vigenere Key is: ' + key)
+print('The initial message is: ' + decrypt(cipher, key))

@@ -109,10 +109,10 @@ for i in range(num_of_messages):
     Blowfish_CBC += count_different_bits(m1Enc, m2Enc) / 64
 
 
-print(AES_ECB / num_of_messages)
-print(AES_CBC / num_of_messages)
-print(Blowfish_ECB / num_of_messages)
-print(Blowfish_CBC / num_of_messages)
+print("AES_ECB avalanche is: " + str(AES_ECB / num_of_messages))
+print("AES_CBC avalanche is: " + str(AES_CBC / num_of_messages))
+print("Blowfish_ECB avalanche is: " + str(Blowfish_ECB / num_of_messages))
+print("Blowfish_CBC avalanche is: " + str(Blowfish_CBC / num_of_messages))
 
 
 

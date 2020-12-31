@@ -87,14 +87,13 @@ cipher = lfsr.msgtobits('i!))aiszwykqnfcyc!?secnncvch'.upper())
 
 # Converts given chars to bits based on the array given.
 m = lfsr.msgtobits('ab'.upper())
+print(m)
 
 # Converts given cipher to bits based on the array given.
 c = lfsr.msgtobits('.s'.upper())
 
 # Calculating Encryption key for the above message and cipher.
 state = m ^ c
-
-
 
 seed = BitArray(bin = '1111001011')
 key = ''
@@ -106,4 +105,3 @@ while(len(key) < 140):
 print(key)
 key = BitArray(bin = key)
 print(lfsr.bitstomsg(key ^ cipher))
-print(lfsr.bitstomsg(cipher).upper())

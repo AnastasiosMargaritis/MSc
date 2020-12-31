@@ -75,7 +75,7 @@ def calc_f(continued_fractions, e):
     return Fn, possible_keys
 
 # Calculates roots of quadradic equation.
-def quadradic_roots(N, Fn):
+def quadratic_roots(N, Fn):
 
     roots = []
 
@@ -130,9 +130,12 @@ continued_fractions = calc_continued_fractions(fractions)
 # Calculate Φ(Ν) and eliminate non valiable pairs.
 Fn, possible_keys = calc_f(continued_fractions, e)
 
-# For each Φ(Ν) calculate the roots of the quadradic equation.
-prime_numbers, index = quadradic_roots(N, Fn)
+# For each Φ(Ν) calculate the roots of the quadratic equation.
+prime_numbers, index = quadratic_roots(N, Fn)
 
 # Decryption message.
 decryption = decrypt(C, N, possible_keys[index][1])
 print(''.join(decryption))
+
+
+print(possible_keys)

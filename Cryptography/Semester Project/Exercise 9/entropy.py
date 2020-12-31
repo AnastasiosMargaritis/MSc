@@ -57,6 +57,10 @@ def mutual_information(entropy, commited):
 allocation = [[1/7, 1/7, 1/7], [0, 1/7, 1/7], [2/7, 0, 0]]
 
 entropies = entropy(allocation)
+print('[H(X), H(X)] values are: ' + str(entropies))
 joint = joint_entropy(allocation)
+print('H(X,Y) value is=: ' + str(joint))
 commited = commited_entropy(entropies, joint)
+print('[H(Y|X), H(X|Y)] values are: ' + str(commited))
 mutual = mutual_information(entropies[0], commited[0])
+print('I(X,Y) value is: ' + str(mutual))
