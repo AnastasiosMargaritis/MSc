@@ -146,7 +146,7 @@ prob_key_length = calculate_key_length(cipher, min_key_length, max_key_length)
 
 # Extracting biggest probability, so key_length.
 values = prob_key_length.values()
-key_length = 7
+key_length = 14
 
 ciphers = break_ciphers(cipher, key_length)
 

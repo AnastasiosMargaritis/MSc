@@ -1,5 +1,7 @@
 import random
 import math
+from nprime import fermat as pfermat
+from nprime import miller_rabin as mr
 
 # Calculates a^g mod N.
 def fast(a, g, N):
@@ -67,7 +69,7 @@ def Miller_Rabin(a):
     # if rand_num ^ d % a == 1 and for j in 0 <= j <= r - 1
     # rand_num ^ (2^i * d) % a == a - 1, which are the 
     # Miller-Rabin conditions for primality.
-    for i in range(20): 
+    for i in range(5): 
         rand_num = random.randrange(2, a) 
         if Miller_Rabin_conditions(rand_num, d, r, a): 
             return False
@@ -85,10 +87,13 @@ def safe_prime(n):
 
 #---------------------------------Fermat's primality test------------------------------------------
 # Since we want 2048 bits, n = 2048
-# n = 2048
+n = 2048
 
-# print('A prime number of 2048 bits with Fermat primality test is: ')
-# print(fermat(n))
+print('A prime number of 2048 bits with Fermat primality test is: ')
+prime = fermat(n)
+print(prime)
+print('Fermat tested with nprime library, the result: ')
+print(pfermat(prime))
 
 
 #------------------------------Miller Rabin method-------------------------------------------------
@@ -102,6 +107,8 @@ while True:
     else:    
         print('A prime number of 1300 bits with Miller-Rabin primality test is: ')
         print(a)
+        print('Miller_Rabin tested with nprime library, the result is: ')
+        print(mr(a))
         break
 
 
