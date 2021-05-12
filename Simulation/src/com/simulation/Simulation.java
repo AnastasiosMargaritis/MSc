@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Simulation {
 
-    public static int Q_LIMIT = 1000;
+    public static int Q_LIMIT = 10000000;
     public static int BUSY = 1;
     public static int IDLE = 0;
 
@@ -21,9 +21,9 @@ public class Simulation {
         seed1 = 99275.0;
         seed2 = 48612.0;
 
-        mean_interarrival = 5;
-        mean_service = 1;
-        num_delays_required = 1000;
+        mean_interarrival = 0.5;
+        mean_service = 2;
+        num_delays_required = 50000;
 
         /* Initialize the simulation. */
         initialize();
@@ -40,9 +40,11 @@ public class Simulation {
             switch (next_event_type) {
                 case 1:
                     arrive();
+                    System.out.println(1);
                     break;
                 case 2:
                     depart();
+                    System.out.println(2);
                     break;
             }
         }

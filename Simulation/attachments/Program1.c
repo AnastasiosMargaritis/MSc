@@ -3,12 +3,12 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define Q_LIMIT 100
+#define Q_LIMIT 10000000
 #define BUSY 1
 #define IDLE 0
 
 int next_event_type, num_progs_delayed, num_delays_required,
-num_events, num_in_q, server_status;
+num_events, num_in_q, server_status, counter_arr, counter_dep;
 double seed1, seed2, yy1, yy2, yy;
 float area_num_in_q, area_server_status, mean_interarrival,
 mean_service, time, time_last_event, total_of_delays,
@@ -36,6 +36,8 @@ int main()
     num_events = 2;
     seed1 = 99275.0;
     seed2 = 48612.0;
+    counter_arr = 0;
+    counter_dep = 0;
 
     /* Read input parameters. */
     fscanf(infile, "%f %f %d", &mean_interarrival, &mean_service,
@@ -65,15 +67,19 @@ int main()
         switch (next_event_type) {
             case 1:
                 arrive();
+                counter_arr ++;
                 break;
             case 2:
                 depart();
+                counter_dep ++;
                 break;
         }
     }
 
     /* Invoke the report generator and end the simulation. */
     report();
+    fprintf(outfile, "Arrivals number: %d", counter_arr);
+    fprintf(outfile, "Departs number: %d", counter_dep);
     fclose(infile);
     fclose(outfile);
     return 0;
@@ -214,7 +220,7 @@ void report(void)
     area_num_in_q / time);
     fprintf(outfile, "Server utilization%15.3f\n\n",
     area_server_status / time);
-    fprintf(outfile, "Time simulation ended%12.3f minutes", time);
+    fprintf(outfile, "Time simulation ended%12.3f minutes\n", time);
 }
 
 void update_time_avg_stats(void)
