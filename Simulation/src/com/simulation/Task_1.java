@@ -11,13 +11,15 @@ public class Task_1 {
     public static int IDLE = 0;
 
     public static int next_event_type, num_progs_delayed_1, num_progs_delayed_2, num_progs_delayed, num_delays_required, num_events, num_in_q_1, num_in_q_2, server_status_1, server_status_2, counter_arr_1, counter_arr_2, counter_dep_1, counter_dep_2;
-    public static double seed1, seed2, yy1, yy2, yy;
+    public static double seed1, seed2, yy1, yy2, yy3, yy4, yy;
     public static double area_num_in_q_1, area_num_in_q_2, area_server_status_1, area_server_status_2, mean_interarrival, mean_service_1, mean_service_2, time, time_last_event, total_of_delays_1, total_of_delays_2, mean_response_time;
     public static double[] time_arrival_1 = new double[Q_LIMIT + 1];
     public static double[] time_arrival_2 = new double[Q_LIMIT + 1];
     public static double[] time_next_event = new double[4];
 
     public static void main(String[] args) {
+
+        Random random = new Random();
 
         /* Specify the number of events for the timing function. */
         num_events = 3;
@@ -29,30 +31,37 @@ public class Task_1 {
         mean_service_2 = 1;
         num_delays_required = 40000;
 
+        int arr1 = 0, arr2 = 0;
+
         /* Initialize the simulation. */
         initialize();
 
         /* Run the simulation while more delays are still needed. */
         while (num_progs_delayed < num_delays_required) {
-            /* Determine the next event. */
+//            /* Determine the next event. */
             timing();
-
-            /* Update time-average statistical accumulators. */
+//
+//            /* Update time-average statistical accumulators. */
             update_time_avg_stats();
-
-            /* Invoke the appropriate event function. */
+//
+//            /* Invoke the appropriate event function. */
             switch (next_event_type) {
                 case 1:
-                    arrive();
+                    double pos = random.nextDouble();
+                    if (pos <= 0.65){
+                        arrive_1();
+                        arr1++;
+                    }else{
+                        arrive_2();
+                        arr2++;
+                    }
                     break;
                 case 2:
                     depart_1();
-                    counter_dep_1++;
                     mean_response_time += time;
                     break;
                 case 3:
                     depart_2();
-                    counter_dep_2++;
                     mean_response_time += time;
                     break;
             }
@@ -60,10 +69,6 @@ public class Task_1 {
 
         /* Invoke the report generator and end the simulation. */
         report();
-        System.out.println("Arrival 1: " + counter_arr_1);
-        System.out.println("Departs 1: " + counter_dep_1);
-        System.out.println("Arrival 2: " + counter_arr_2);
-        System.out.println("Departs 2: " + counter_dep_2);
     }
 
     public static void initialize(){
@@ -97,12 +102,9 @@ public class Task_1 {
 
         /* Initialize event list. */
         time_next_event[1] = time + ThreadLocalRandom.current().nextDouble(0.8, 1.2);
-        System.out.println(time_next_event[1]);
         time_next_event[2] = 1e+30;
-        System.out.println(time_next_event[2]);
         yy1 = yy;
         time_next_event[3] = 1e+30;
-        System.out.println(time_next_event[3]);
         yy2 = yy;
     }
 
@@ -149,73 +151,35 @@ public class Task_1 {
 
     }
 
-    public static void arrive() {
+    public static void arrive_1() {
+        /* Schedule next arrival. */
+        time_next_event[1] = time + ThreadLocalRandom.current().nextDouble(0.8, 1.2);
 
-        Random random = new Random();
-        double prob = random.nextDouble();
+        /* Check to see whether server is busy. */
+        if (server_status_1 == BUSY) {
+            /* Server is busy, so increment number of customers in queue. */
+            ++num_in_q_1;
 
-        if(prob <= 0.65){
-            counter_arr_1++;
-            /* Schedule next arrival. */
-            time_next_event[1] = time + ThreadLocalRandom.current().nextDouble(0.8, 1.2);
-
-            /* Check to see whether server is busy. */
-            if (server_status_1 == BUSY) {
-                /* Server is busy, so increment number of customers in queue. */
-                ++num_in_q_1;
-
-                /* Check to see whether an overflow condition exists. */
-                if (num_in_q_1 > Q_LIMIT) {
-                    /* The queue has overflowed, so stop the simulation. */
-                    System.out.println("Overflow of the array time_arrival at: " + time);
-                }
-
-                /* There is still room in the queue */
-                time_arrival_1[num_in_q_1] = time;
-            }else {
-                counter_arr_2++;
-                /* Server is idle, so arriving customer has a delay of zero. */
-             /* Increment the number of customers delayed, and make server
-             busy. */
-                ++num_progs_delayed;
-                ++num_progs_delayed_1;
-                server_status_1 = BUSY;
-
-                /* Schedule a departure (service completion). */
-                time_next_event[2] = time + expon(mean_service_1, yy1);
-                yy1=yy;
+            /* Check to see whether an overflow condition exists. */
+            if (num_in_q_1 > Q_LIMIT) {
+                /* The queue has overflowed, so stop the simulation. */
+                System.out.println("Overflow of the array time_arrival at: " + time);
             }
+
+            /* There is still room in the queue */
+            time_arrival_1[num_in_q_1] = time;
         }else{
-            /* Schedule next arrival. */
-            time_next_event[1] = time + ThreadLocalRandom.current().nextDouble(0.8, 1.2);
+            /* Server is idle, so arriving customer has a delay of zero. */
+        /* Increment the number of customers delayed, and make server
+        busy. */
+            ++num_progs_delayed;
+            ++num_progs_delayed_1;
+            server_status_1 = BUSY;
 
-            /* Check to see whether server is busy. */
-            if (server_status_2 == BUSY) {
-                /* Server is busy, so increment number of customers in queue. */
-                ++num_in_q_2;
-
-                /* Check to see whether an overflow condition exists. */
-                if (num_in_q_2 > Q_LIMIT) {
-                    /* The queue has overflowed, so stop the simulation. */
-                    System.out.println("Overflow of the array time_arrival at: " + time);
-                }
-
-                /* There is still room in the queue */
-                time_arrival_1[num_in_q_2] = time;
-            }else {
-                /* Server is idle, so arriving customer has a delay of zero. */
-             /* Increment the number of customers delayed, and make server
-             busy. */
-                ++num_progs_delayed;
-                ++num_progs_delayed_2;
-                server_status_2 = BUSY;
-
-                /* Schedule a departure (service completion). */
-                time_next_event[3] = time + expon(mean_service_2, yy2);
-                yy2=yy;
-            }
+            /* Schedule a departure (service completion). */
+            time_next_event[2] = time + expon(mean_service_1, yy1);
+            yy1=yy;
         }
-
     }
 
     public static void depart_1(){
@@ -243,12 +207,45 @@ public class Task_1 {
         /* Increment the number of customers delayed, and schedule
         departure. */
             ++num_progs_delayed;
+            ++num_progs_delayed_1;
             time_next_event[2] = time + expon(mean_service_1, yy1);
             yy1=yy;
 
             /* Move each customer in queue (if any) up one place. */
             for (i = 1; i <= num_in_q_1; ++i)
                 time_arrival_1[i] = time_arrival_1[i + 1];
+        }
+    }
+
+    public static void arrive_2(){
+        /* Schedule next arrival. */
+        time_next_event[1] = time + ThreadLocalRandom.current().nextDouble(0.8, 1.2);
+        yy3=yy;
+
+        /* Check to see whether server is busy. */
+        if (server_status_2 == BUSY) {
+            /* Server is busy, so increment number of customers in queue. */
+            ++num_in_q_2;
+
+            /* Check to see whether an overflow condition exists. */
+            if (num_in_q_2 > Q_LIMIT) {
+                /* The queue has overflowed, so stop the simulation. */
+                System.out.println("Overflow of the array time_arrival at: " + time);
+            }
+
+            /* There is still room in the queue */
+            time_arrival_2[num_in_q_2] = time;
+        }else {
+            /* Server is idle, so arriving customer has a delay of zero. */
+        /* Increment the number of customers delayed, and make server
+        busy. */
+            ++num_progs_delayed;
+            ++num_progs_delayed_2;
+            server_status_2 = BUSY;
+
+            /* Schedule a departure (service completion). */
+            time_next_event[3] = time + expon(mean_service_2, yy2);
+            yy2=yy;
         }
     }
 
@@ -261,7 +258,7 @@ public class Task_1 {
         /* The queue is empty so make the server idle and eliminate the
         departure (service completion) event from consideration. */
             server_status_2 = IDLE;
-            time_next_event[2] = 1.0e+30;
+            time_next_event[3] = 1.0e+30;
         }
         else {
         /* The queue is nonempty, so decrement the number of customers
@@ -277,7 +274,8 @@ public class Task_1 {
         /* Increment the number of customers delayed, and schedule
         departure. */
             ++num_progs_delayed;
-            time_next_event[2] = time + expon(mean_service_2, yy2);
+            ++num_progs_delayed_2;
+            time_next_event[3] = time + expon(mean_service_2, yy2);
             yy2=yy;
 
             /* Move each customer in queue (if any) up one place. */

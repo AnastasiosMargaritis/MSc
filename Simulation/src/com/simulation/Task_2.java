@@ -28,10 +28,6 @@ public class Task_2 {
         mean_service_1 = 2;
         mean_service_2 = 2;
         num_delays_required = 50000;
-        int counter_Arr_1 =0;
-        int counter_Dep_1 = 0;
-        int counter_Arr_2 =0;
-        int counter_Dep_2 = 0;
 
         /* Initialize the simulation. */
         initialize();
@@ -48,19 +44,15 @@ public class Task_2 {
             switch (next_event_type) {
                 case 1:
                     arrive_1();
-                    counter_Arr_1++;
                     break;
                 case 2:
                     depart_1();
-                    counter_Dep_1++;
                     break;
                 case 3:
                     arrive_2();
-                    counter_Arr_2++;
                     break;
                 case 4:
                     depart_2();
-                    counter_Dep_2++;
                     mean_response_time += time;
                     break;
             }
@@ -68,15 +60,9 @@ public class Task_2 {
 
         /* Invoke the report generator and end the simulation. */
         report();
-
-        System.out.println("Arrival 1: " + counter_Arr_1);
-        System.out.println("Departs 1: " + counter_Dep_1);
-        System.out.println("Arrival 2: " + counter_Arr_2);
-        System.out.println("Departs 2: " + counter_Dep_2);
     }
 
     public static void initialize(){
-
         /* Initialize the simulation clock. */
         time = 0.0;
         mean_response_time = 0;
@@ -134,7 +120,6 @@ public class Task_2 {
             /* The event list is empty, so stop the simulation. */
             System.out.println("Event list empty at timeL " + time);
         }
-
         /* The event list is not empty, so advance the simulation clock. */
         time = min_time_next_event;
     }
@@ -212,7 +197,6 @@ public class Task_2 {
 
         /* Increment the number of customers delayed, and schedule
         departure. */
-            ++num_progs_delayed;
             ++num_progs_delayed_1;
             time_next_event[2] = time + expon(mean_service_1, yy2);
             yy2=yy;
@@ -239,19 +223,19 @@ public class Task_2 {
                 System.out.println("Overflow of the array time_arrival at: " + time);
             }
 
+
             /* There is still room in the queue */
             time_arrival_2[num_in_q_2] = time;
         }else {
             /* Server is idle, so arriving customer has a delay of zero. */
         /* Increment the number of customers delayed, and make server
         busy. */
-            ++num_progs_delayed;
             ++num_progs_delayed_2;
             server_status_2 = BUSY;
 
             /* Schedule a departure (service completion). */
-            time_next_event[4] = time + expon(mean_service_1, yy3);
-            yy4=yy;
+            time_next_event[4] = time + expon(mean_service_2, yy3);
+            yy3=yy;
         }
     }
 
@@ -265,8 +249,7 @@ public class Task_2 {
         departure (service completion) event from consideration. */
             server_status_2 = IDLE;
             time_next_event[4] = 1.0e+30;
-        }
-        else {
+        }else{
         /* The queue is nonempty, so decrement the number of customers
         in queue. */
             --num_in_q_2;
@@ -291,9 +274,9 @@ public class Task_2 {
     }
 
     public static void report(){
-        System.out.println("Average jobs in queue 1: " + area_num_in_q_1 / time);
-        System.out.println("Average jobs in queue 2: " + area_num_in_q_2 / time);
-        System.out.println("Average jobs in system: " + ((area_num_in_q_1 + area_num_in_q_2)/2) / time);
+        System.out.println("Average jobs in queue 1: " + area_num_in_q_1 / time + ".");
+        System.out.println("Average jobs in queue 2: " + area_num_in_q_2 / time + ".");
+        System.out.println("Average jobs in system: " + ((area_num_in_q_1 + area_num_in_q_2)/2) / time + ".");
         System.out.println("Average delay in queue 1: " + total_of_delays_1 / num_progs_delayed_1 + " minutes.");
         System.out.println("Average delay in queue 2: " + total_of_delays_2 / num_progs_delayed_2 + " minutes.");
         System.out.println("Mean Reponse Time: " + mean_response_time / num_delays_required + " minutes.");

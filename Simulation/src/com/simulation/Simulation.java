@@ -22,8 +22,8 @@ public class Simulation {
         seed2 = 48612.0;
 
         mean_interarrival = 0.5;
-        mean_service = 2;
-        num_delays_required = 50000;
+        mean_service = 3;
+        num_delays_required = 40000;
 
         /* Initialize the simulation. */
         initialize();
@@ -40,11 +40,9 @@ public class Simulation {
             switch (next_event_type) {
                 case 1:
                     arrive();
-                    System.out.println(1);
                     break;
                 case 2:
                     depart();
-                    System.out.println(2);
                     break;
             }
         }
@@ -117,7 +115,6 @@ public class Simulation {
 
         /* Update area under server-busy indicator function. */
         area_server_status += server_status * time_since_last_event;
-
     }
 
     public static void arrive() {
